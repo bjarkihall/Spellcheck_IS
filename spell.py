@@ -6,7 +6,12 @@ import random
 
 allWords={}
 
-#Hash function for storing frequency based on sandwich
+#Hash function that takes in a sandwich value and returns an index #
+#Sandwich is a 2-letter string that represents the context for a word.
+#First letter represents the type of word that precedes the current word
+#Second letter represents the type of word that follows the current word
+#e.g.: if a word's sandwich is 'nl', then we know it is preceded by a nafnörd
+#and is followed by a lýsingarörd
 def sandwichToNumber(sandwich):
 	return{
 	'nn':0,
@@ -186,46 +191,138 @@ def sandwichToNumber(sandwich):
 	'..':175,
 	'ee':176,
 	'.x':177,
-	'xt':178
+	'xt':178,
+	'e.':179,
+	'g?':180,
+	'!t':181,
+	'xx':182,
+	'x;':183,
+	'e;':184,
+	'.e':185,
+	'?x':186,
+	'.;':187,
+	'x!':188,
+	'x?':189,
+	'?e':190,
+	'xg':191,
+	'e?':192,
+	'g:':193,
+	'g;':194,
+	';.':195,
+	'!!':196,
+	't!':197,
+	'xe':198,
+	'?;':199,
+	'??':200,
+	'!?':201,
+	'ge':202
 	}[sandwich]
 
+#Array of file names for our training data
+files = [
+"althingi_tagged/079.csv", 
+"althingi_tagged/080.csv", 
+"althingi_tagged/081.csv", 
+"althingi_tagged/082.csv",
+"althingi_tagged/084.csv",
+"althingi_tagged/085.csv",
+"althingi_tagged/086.csv", 
+"althingi_tagged/087.csv", 
+"althingi_tagged/088.csv", 
+"althingi_tagged/089.csv",
+"althingi_tagged/090.csv",
+"althingi_tagged/091.csv",
+"althingi_tagged/092.csv",
+"althingi_tagged/093.csv", 
+"althingi_tagged/094.csv", 
+"althingi_tagged/095.csv",
+"althingi_tagged/096.csv",
+"althingi_tagged/097.csv",
+"althingi_tagged/099.csv", 
+"althingi_tagged/100.csv", 
+"althingi_tagged/101.csv", 
+"althingi_tagged/102.csv",
+"althingi_tagged/103.csv",
+"althingi_tagged/104.csv",
+"althingi_tagged/105.csv",
+"althingi_tagged/106.csv", 
+"althingi_tagged/107.csv", 
+"althingi_tagged/108.csv",
+"althingi_tagged/110.csv",
+"althingi_tagged/112.csv", 
+"althingi_tagged/113.csv", 
+"althingi_tagged/114.csv", 
+"althingi_tagged/115.csv",
+"althingi_tagged/116.csv",
+"althingi_tagged/117.csv",
+"althingi_tagged/118.csv",
+"althingi_tagged/119.csv", 
+"althingi_tagged/120.csv", 
+"althingi_tagged/121.csv",
+"althingi_tagged/122.csv",
+"althingi_tagged/123.csv",
+"althingi_tagged/124.csv",
+"althingi_tagged/125.csv", 
+"althingi_tagged/126.csv", 
+"althingi_tagged/127.csv", 
+"althingi_tagged/128.csv",
+"althingi_tagged/129.csv",
+"althingi_tagged/130.csv",
+"althingi_tagged/131.csv",
+"althingi_tagged/133.csv", 
+"althingi_tagged/134.csv", 
+"althingi_tagged/135.csv",
+"althingi_tagged/136.csv"
+]
+#These characters will be ignored during scanning
+specialChars =['','»', '«', '\\', '{', '}', '±', '^', '_', '>','<', '´','`', "*","$",'\"',"=",'\'',"+","-","[","]","/",":",'(',')',","]
 
-with open('althingi_tagged/079.csv') as csvfile:
-	fieldnames = ['word', 'case', 'lemma']
-	reader = csv.DictReader(csvfile, fieldnames=fieldnames)
-	next(reader)
-	prevWord='.'
-	prevCase='.'
-	allWords[prevWord]=[1,prevCase,{}]
-	sandwich=prevCase
-	for row in reader:
-		currWord = row['word']
-		currWord = currWord.lower()
-		currCase=row['case'][:1]
-		if (currWord=='' or currWord=="+" or currWord=="-" or currWord=="[" or currWord=="]" or currWord=="/"or currWord==":" or currWord=='(' or currWord==')' or currWord==","):
-			continue
-		#if this is the first time we have encountered this word
-		if not allWords.get(currWord):
-			allWords[currWord]=[1,prevCase,{}]
-		else:
-			allWords[currWord][0]=allWords[currWord][0]+1
-		#If we are at the beginning of the file
-		if (len(sandwich)>2):
-			sandwich=sandwich 
-		prevWord2back=prevWord
-		prevCase2back=prevCase
-		sandwich=prevCase2back+currCase
-		#print "CW: ", currWord
-		#print "sandw: ", sandwich
-		#print "prevWord:", prevWord
-		sandwichIndex=sandwichToNumber(sandwich)
-		print sandwichIndex
-		if not allWords[prevWord][2].get(sandwichIndex):
-			allWords[prevWord][2][sandwichIndex]=1
-		else: 
-			allWords[prevWord][2][sandwichIndex]+=1
-		prevWord=currWord
-		prevCase=currCase
+#Iterate through all the training data Files to build our dictionary
+for x in range(0,len(files)):
+	#For each file of our training data
+	with open(files[x]) as csvfile:
+		fieldnames = ['word', 'tag', 'lemma']
+		reader = csv.DictReader(csvfile, fieldnames=fieldnames)
+		print "Building dictionary from", files[x]
+		next(reader) #skip the Column headers
+		prevWord='.'
+		prevCase='.'
+		allWords[prevWord]=[1,prevCase,{}]
+		sandwich=prevCase
+		#For each word, tally up the frequency and context (sandwich) where we found it
+		for row in reader:
+			currWord = row['word']
+			#Only use the first character from the "tag" column
+			currCase=row['tag'][:1]
+			#Skip if its a special character
+			if (currWord in specialChars):
+				continue
+			#if this is the first time we have encountered this word, initiate its entry in the hashTable
+			if not allWords.get(currWord):
+				allWords[currWord]=[1,prevCase,{}]
+			#if we have seen it before, increment its frequency
+			else:
+				allWords[currWord][0]=allWords[currWord][0]+1
+			#If we are at the beginning of the file
+			if (len(sandwich)>2):
+				sandwich=sandwich
+			#We need to always have access to the previous 2 words plus current word
+			#So that we will always have a 3-mer set of words 
+			prevWord2back=prevWord
+			prevCase2back=prevCase
+			#We cant see the full sandwich of a word until we've read data from the 
+			#word that follows it, so anytime we scan in a new word, we are then "looking back"
+			#and processing the sandwich of the word that came before it
+			sandwich=prevCase2back+currCase
+			sandwichIndex=sandwichToNumber(sandwich)
+			#If this is our first instance of the word in this particular context/sandwich,
+			#initialize the hashValue for that pairing. otherwise, increment +1
+			if not allWords[prevWord][2].get(sandwichIndex):
+				allWords[prevWord][2][sandwichIndex]=1
+			else: 
+				allWords[prevWord][2][sandwichIndex]+=1
+			prevWord=currWord
+			prevCase=currCase
 
 def words(text): return re.findall('[a-ö]+', text.lower())
 
@@ -246,49 +343,70 @@ def edits1(word):
    inserts    = [a + c + b     for a, b in splits for c in alphabet]
    return set(deletes + transposes + replaces + inserts)
 
-#All possible variations with edi distance=2
+#All possible variations with edit distance=2
 def known_edits2(word):
 	return set(e2 for e1 in edits1(word) for e2 in edits1(e1) if e2 in NWORDS)
 
+#remove any non-sensical words (e.g. dthr)
 def known(words) : return set(w for w in words if w in NWORDS)
 
+#returns the most probable (highest frequency within sandwich) word from the collection of all
+#possible/real words that are <3 Levenstein distance from word.
 def correct(word, sandwich):
 	candidates = known([word]) or known(edits1(word)) or known_edits2(word) or [word]
-	print "sandwich: ",sandwich
-	print "word: ", word
 	return max(candidates, key=lambda x: getFrequency(x,sandwich))
 
 def getFrequency (word, sandwich):
-	#Psuedo-count of small frequency if the word has not been trained on
+	#Psuedo-count of small frequency if a new word is introduced that model has not been trained on
 	if (not allWords.get(word)):
 		return 0.0001
 	else:
 	 return allWords[word][2].get(sandwich)
 
+#Test our model on some text with corrected errors
 def practice():
+	#These variables will track our accuracy
+	wrong=0
+	right=0
+	print "Proofreading your file now..."
 	with open('althingi_errors/079.csv') as csvfile:
-		fieldnames = ['word', 'case', 'lemma', 'correctWord']
+		fieldnames = ['word', 'tag', 'lemma', 'correctWord']
 		reader = csv.DictReader(csvfile, fieldnames=fieldnames)
 		next(reader)
 		prev2Word='.'
 		prev2Case='.'
 		prev2Correct='.'
 		prevWord=next(reader)['word']
-		prevCase=next(reader)['case'][:1]
+		prevCase=next(reader)['tag'][:1]
 		prevCorrect=next(reader)['correctWord']
 		for row in reader:
 			currWord=row['word']
-			currCase=row['case'][:1]
+			currCase=row['tag'][:1]
 			currCorrect=row['correctWord']
+			#Skip special Characters
+			if (currWord in specialChars):
+				continue
 			prevSandwich=prev2Case+currCase
+			#Use our model to predict the correct spelling
 			myAnswer=correct(prevWord,prevSandwich)
-			print "PrevWord:", prevWord, "MyAnswer: ", myAnswer, "CorrectWord: ", prevCorrect
+			if (myAnswer=='i'):
+				myAnswer='í'
+			#Check our prediction against the proven correct spelling
+			if (myAnswer != prevCorrect):
+				wrong +=1
+				print "PrevWord:", prevWord, "MyAnswer: ", myAnswer, "CorrectWord: ", prevCorrect
+			else:
+				right +=1
 			prev2Word=prevWord
 			prev2Case=prevCase
 			prev2Correct=prevCorrect
 			prevWord=currWord
 			prevCase=currCase
 			prevCorrect=currCorrect
+	#Print our final accuracy data
+	print "WRONG: ", wrong
+	print "RIGHT: ", right
+	print "RATIO: ", float(wrong/right)
 
-#print correct("pég")
+
 practice()
