@@ -6,6 +6,7 @@ import random
 
 allWords={}
 
+#Hash function for storing frequency based on sandwich
 def sandwichToNumber(sandwich):
 	return{
 	'nn':0,
@@ -208,7 +209,7 @@ with open('althingi_tagged/079.csv') as csvfile:
 			allWords[currWord]=[1,prevCase,{}]
 		else:
 			allWords[currWord][0]=allWords[currWord][0]+1
-		#If we are at the beginning of the 
+		#If we are at the beginning of the file
 		if (len(sandwich)>2):
 			sandwich=sandwich 
 		prevWord2back=prevWord
@@ -245,6 +246,7 @@ def edits1(word):
    inserts    = [a + c + b     for a, b in splits for c in alphabet]
    return set(deletes + transposes + replaces + inserts)
 
+#All possible variations with edi distance=2
 def known_edits2(word):
 	return set(e2 for e1 in edits1(word) for e2 in edits1(e1) if e2 in NWORDS)
 
@@ -254,7 +256,14 @@ def correct(word, sandwich):
 	candidates = known([word]) or known(edits1(word)) or known_edits2(word) or [word]
 	print "sandwich: ",sandwich
 	print "word: ", word
-	return max(candidates, key=lambda x: allWords[x][2].get(sandwich))
+	return max(candidates, key=lambda x: getFrequency(x,sandwich))
+
+def getFrequency (word, sandwich):
+	#Psuedo-count of small frequency if the word has not been trained on
+	if (not allWords.get(word)):
+		return 0.0001
+	else:
+	 return allWords[word][2].get(sandwich)
 
 def practice():
 	with open('althingi_errors/079.csv') as csvfile:
@@ -269,11 +278,11 @@ def practice():
 		prevCorrect=next(reader)['correctWord']
 		for row in reader:
 			currWord=row['word']
-			currCase=row['case']
+			currCase=row['case'][:1]
 			currCorrect=row['correctWord']
 			prevSandwich=prev2Case+currCase
 			myAnswer=correct(prevWord,prevSandwich)
-			print "PrevWord:", prevWord, "MyAnswer: ", myAnswer, "CurrWord: ", prevCorrect
+			print "PrevWord:", prevWord, "MyAnswer: ", myAnswer, "CorrectWord: ", prevCorrect
 			prev2Word=prevWord
 			prev2Case=prevCase
 			prev2Correct=prevCorrect
