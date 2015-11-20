@@ -219,6 +219,7 @@ def sandwichToNumber(sandwich):
 	}[sandwich]
 
 #Array of file names for our training data
+
 files = [
 "althingi_tagged/079.csv", 
 "althingi_tagged/080.csv", 
@@ -407,6 +408,5 @@ def practice():
 	print "WRONG: ", wrong
 	print "RIGHT: ", right
 	print "RATIO: ", float(wrong/right)
-
 
 practice()
