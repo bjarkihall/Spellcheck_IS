@@ -186,46 +186,56 @@ def sandwichToNumber(sandwich):
 	'..':175,
 	'ee':176,
 	'.x':177,
-	'xt':178
+	'xt':178,
+	'e.':179,
+	'g?':180,
+	'!t':181
 	}[sandwich]
 
+files = [
+"althingi_tagged/079.csv", 
+"althingi_tagged/080.csv", 
+"althingi_tagged/081.csv", 
+"althingi_tagged/082.csv",
+"althingi_tagged/083.csv",
+"althingi_tagged/084.csv",
+"althingi_tagged/085.csv",
+"althingi_tagged/093.csv"]
 
-with open('althingi_tagged/079.csv') as csvfile:
-	fieldnames = ['word', 'case', 'lemma']
-	reader = csv.DictReader(csvfile, fieldnames=fieldnames)
-	next(reader)
-	prevWord='.'
-	prevCase='.'
-	allWords[prevWord]=[1,prevCase,{}]
-	sandwich=prevCase
-	for row in reader:
-		currWord = row['word']
-		currWord = currWord.lower()
-		currCase=row['case'][:1]
-		if (currWord=='' or currWord=="+" or currWord=="-" or currWord=="[" or currWord=="]" or currWord=="/"or currWord==":" or currWord=='(' or currWord==')' or currWord==","):
-			continue
-		#if this is the first time we have encountered this word
-		if not allWords.get(currWord):
-			allWords[currWord]=[1,prevCase,{}]
-		else:
-			allWords[currWord][0]=allWords[currWord][0]+1
-		#If we are at the beginning of the file
-		if (len(sandwich)>2):
-			sandwich=sandwich 
-		prevWord2back=prevWord
-		prevCase2back=prevCase
-		sandwich=prevCase2back+currCase
-		#print "CW: ", currWord
-		#print "sandw: ", sandwich
-		#print "prevWord:", prevWord
-		sandwichIndex=sandwichToNumber(sandwich)
-		print sandwichIndex
-		if not allWords[prevWord][2].get(sandwichIndex):
-			allWords[prevWord][2][sandwichIndex]=1
-		else: 
-			allWords[prevWord][2][sandwichIndex]+=1
-		prevWord=currWord
-		prevCase=currCase
+for x in range(0,len(files)):
+	with open(files[x]) as csvfile:
+		fieldnames = ['word', 'case', 'lemma']
+		reader = csv.DictReader(csvfile, fieldnames=fieldnames)
+		next(reader)
+		prevWord='.'
+		prevCase='.'
+		allWords[prevWord]=[1,prevCase,{}]
+		sandwich=prevCase
+		for row in reader:
+			currWord = row['word']
+			#currWord = currWord.lower()
+			currCase=row['case'][:1]
+			if (currWord=='' or currWord=="=" or currWord=='\'' or currWord=="+" or currWord=="-" or currWord=="[" or currWord=="]" or currWord=="/"or currWord==":" or currWord=='(' or currWord==')' or currWord==","):
+				continue
+			#if this is the first time we have encountered this word
+			if not allWords.get(currWord):
+				allWords[currWord]=[1,prevCase,{}]
+			else:
+				allWords[currWord][0]=allWords[currWord][0]+1
+			#If we are at the beginning of the file
+			if (len(sandwich)>2):
+				sandwich=sandwich 
+			prevWord2back=prevWord
+			prevCase2back=prevCase
+			sandwich=prevCase2back+currCase
+			sandwichIndex=sandwichToNumber(sandwich)
+			print sandwichIndex
+			if not allWords[prevWord][2].get(sandwichIndex):
+				allWords[prevWord][2][sandwichIndex]=1
+			else: 
+				allWords[prevWord][2][sandwichIndex]+=1
+			prevWord=currWord
+			prevCase=currCase
 
 def words(text): return re.findall('[a-ö]+', text.lower())
 
@@ -254,8 +264,8 @@ def known(words) : return set(w for w in words if w in NWORDS)
 
 def correct(word, sandwich):
 	candidates = known([word]) or known(edits1(word)) or known_edits2(word) or [word]
-	print "sandwich: ",sandwich
-	print "word: ", word
+	#print "sandwich: ",sandwich
+	#print "word: ", word
 	return max(candidates, key=lambda x: getFrequency(x,sandwich))
 
 def getFrequency (word, sandwich):
@@ -266,6 +276,8 @@ def getFrequency (word, sandwich):
 	 return allWords[word][2].get(sandwich)
 
 def practice():
+	wrong=0
+	right=0
 	with open('althingi_errors/079.csv') as csvfile:
 		fieldnames = ['word', 'case', 'lemma', 'correctWord']
 		reader = csv.DictReader(csvfile, fieldnames=fieldnames)
@@ -280,15 +292,24 @@ def practice():
 			currWord=row['word']
 			currCase=row['case'][:1]
 			currCorrect=row['correctWord']
+			if (currWord=='' or currWord== "=" or currWord=='\'' or currWord=="+" or currWord=="-" or currWord=="[" or currWord=="]" or currWord=="/"or currWord==":" or currWord=='(' or currWord==')' or currWord==","):
+				continue
 			prevSandwich=prev2Case+currCase
 			myAnswer=correct(prevWord,prevSandwich)
-			print "PrevWord:", prevWord, "MyAnswer: ", myAnswer, "CorrectWord: ", prevCorrect
+			if (myAnswer != prevCorrect):
+				wrong +=1
+				print "PrevWord:", prevWord, "MyAnswer: ", myAnswer, "CorrectWord: ", prevCorrect
+			else:
+				right +=1
 			prev2Word=prevWord
 			prev2Case=prevCase
 			prev2Correct=prevCorrect
 			prevWord=currWord
 			prevCase=currCase
 			prevCorrect=currCorrect
+	print "WRONG: ", wrong
+	print "RIGHT: ", right
+	print "RATIO: ", wrong/right
 
 #print correct("pég")
 practice()
