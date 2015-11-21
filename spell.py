@@ -278,6 +278,13 @@ files = [
 #These characters will be ignored during scanning
 specialChars =['','»', '«', '\\', '{', '}', '±', '^', '_', '>','<', '´','`', "*","$",'\"',"=",'\'',"+","-","[","]","/",":",'(',')',","]
 
+#Function to determine if a string is all numeric digits
+def is_number(s):
+	try:
+		float(s)
+		return True
+	except ValueError:
+		return False
 #Iterate through all the training data Files to build our dictionary
 for x in range(0,len(files)):
 	#For each file of our training data
@@ -297,6 +304,9 @@ for x in range(0,len(files)):
 			currCase=row['tag'][:1]
 			#Skip if its a special character
 			if (currWord in specialChars):
+				continue
+			#Skip if its a number
+			if (is_number(currWord)):
 				continue
 			#if this is the first time we have encountered this word, initiate its entry in the hashTable
 			if not allWords.get(currWord):
@@ -386,6 +396,8 @@ def practice():
 			currCorrect=row['correctWord']
 			#Skip special Characters
 			if (currWord in specialChars):
+				continue
+			if (is_number(currWord)):
 				continue
 			prevSandwich=prev2Case+currCase
 			#Use our model to predict the correct spelling
