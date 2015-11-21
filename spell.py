@@ -7,7 +7,9 @@ import random
 allWords={}
 
 #Store name of the inputFile from the commandLine
-fileName= sys.argv[1]
+inputFileName= sys.argv[1]
+outputFileName=sys.argv[2]
+
 
 #Hash function that takes in a sandwich value and returns an index #
 #Sandwich is a 2-letter string that represents the context for a word.
@@ -234,59 +236,61 @@ def sandwichToNumber(sandwich):
 
 files = [
 "althingi_tagged/079.csv",
-"althingi_tagged/080.csv", 
-"althingi_tagged/081.csv", 
+"althingi_tagged/080.csv",
+"althingi_tagged/081.csv",
 "althingi_tagged/082.csv",
 "althingi_tagged/084.csv",
 "althingi_tagged/085.csv",
-"althingi_tagged/086.csv", 
-"althingi_tagged/087.csv", 
-"althingi_tagged/088.csv", 
+"althingi_tagged/086.csv",
+"althingi_tagged/087.csv",
+"althingi_tagged/088.csv",
 "althingi_tagged/089.csv",
 "althingi_tagged/090.csv",
 "althingi_tagged/091.csv",
 "althingi_tagged/092.csv",
-"althingi_tagged/093.csv", 
-"althingi_tagged/094.csv", 
+"althingi_tagged/093.csv",
+"althingi_tagged/094.csv",
 "althingi_tagged/095.csv",
 "althingi_tagged/096.csv",
 "althingi_tagged/097.csv",
-"althingi_tagged/099.csv", 
-"althingi_tagged/100.csv", 
-"althingi_tagged/101.csv", 
+"althingi_tagged/099.csv",
+"althingi_tagged/100.csv",
+"althingi_tagged/101.csv",
 "althingi_tagged/102.csv",
 "althingi_tagged/103.csv",
 "althingi_tagged/104.csv",
 "althingi_tagged/105.csv",
-"althingi_tagged/106.csv", 
-"althingi_tagged/107.csv", 
+"althingi_tagged/106.csv",
+"althingi_tagged/107.csv",
 "althingi_tagged/108.csv",
 "althingi_tagged/110.csv",
-"althingi_tagged/112.csv", 
-"althingi_tagged/113.csv", 
-"althingi_tagged/114.csv", 
+"althingi_tagged/112.csv",
+"althingi_tagged/113.csv",
+"althingi_tagged/114.csv",
 "althingi_tagged/115.csv",
 "althingi_tagged/116.csv",
 "althingi_tagged/117.csv",
 "althingi_tagged/118.csv",
-"althingi_tagged/119.csv", 
-"althingi_tagged/120.csv", 
+"althingi_tagged/119.csv",
+"althingi_tagged/120.csv",
 "althingi_tagged/121.csv",
 "althingi_tagged/122.csv",
 "althingi_tagged/123.csv",
 "althingi_tagged/124.csv",
-"althingi_tagged/125.csv", 
-"althingi_tagged/126.csv", 
-"althingi_tagged/127.csv", 
+"althingi_tagged/125.csv",
+"althingi_tagged/126.csv",
+"althingi_tagged/127.csv",
 "althingi_tagged/128.csv",
 "althingi_tagged/129.csv",
 "althingi_tagged/130.csv",
 "althingi_tagged/131.csv",
-"althingi_tagged/133.csv", 
-"althingi_tagged/134.csv", 
+"althingi_tagged/132.csv",
+"althingi_tagged/133.csv",
+"althingi_tagged/134.csv",
 "althingi_tagged/135.csv",
 "althingi_tagged/136.csv"
 ]
+
 #These characters will be ignored during scanning
 specialChars =['','»', '«', '\\', '{', '}', '±', '^', '_', '>','<', '´','`', "*","$",'\"',"=",'\'',"+","-","[","]","/",":",'(',')',","]
 
@@ -313,7 +317,7 @@ for x in range(0,len(files)):
 	with open(files[x]) as csvfile:
 		fieldnames = ['word', 'tag', 'lemma']
 		reader = csv.DictReader(csvfile, fieldnames=fieldnames)
-		print ("Building dictionary from"), (files[x]), ("...")
+		print ("Building dictionary from", files[x], "...")
 		next(reader) #skip the Column headers
 		prevWord='.'
 		prevCase='.'
@@ -400,23 +404,35 @@ def getFrequency (word, sandwich):
 #Test our model on some text with corrected errors
 def proofRead(file):
 	#These variables will track our accuracy
-	wrong=0
-	right=0
+	#wrong=0
+	#right=0
+	errorsFound=0
+	titles=['Word','Tag','Lemma','CorrectWord']
 	print ("Proofreading your file now...")
 	with open(file) as csvfile:
-		fieldnames = ['word', 'tag', 'lemma', 'correctWord']
+		#fieldnames = ['word', 'tag', 'lemma', 'correctWord']
+		fieldnames = ['word', 'tag', 'lemma']
 		reader = csv.DictReader(csvfile, fieldnames=fieldnames)
+		#Mechanism to write to a .csv file
+		myFile=open(outputFileName,'wb')
+		wr=csv.writer(myFile,quoting=csv.QUOTE_ALL)
+		wr.writerow(titles)
 		next(reader)
 		prev2Word='.'
 		prev2Case='.'
 		prev2Correct='.'
+		prev2Tag='.'
+		prev2Lemma='.'
 		prevWord=next(reader)['word']
 		prevCase=next(reader)['tag'][:1]
-		prevCorrect=next(reader)['correctWord']
+		prevTag=next(reader)['tag']
+		prevLemma=next(reader)['lemma']
 		for row in reader:
+			correctedRow=[] #temporary storage of a word-correction
 			currWord=row['word']
 			currCase=row['tag'][:1]
-			currCorrect=row['correctWord']
+			currTag=row['tag']
+			currLemma=row['lemma']
 			#Skip special Characters
 			if (currWord in specialChars):
 				continue
@@ -428,21 +444,28 @@ def proofRead(file):
 			myAnswer=correct(prevWord,prevSandwich)
 			if (myAnswer=='i'):
 				myAnswer='í'
-			#Check our prediction against the proven correct spelling
-			if (myAnswer != prevCorrect):
-				wrong +=1
-				print ("PrevWord:"), (prevWord), ("MyAnswer: "), (myAnswer), ("CorrectWord: "), (prevCorrect)
-			else:
-				right +=1
+			if (myAnswer != prevWord):
+				errorsFound += 1
+			#Store data for this row
+			correctedRow.append(prevWord)
+			correctedRow.append(prevTag)
+			correctedRow.append(prevLemma)
+			correctedRow.append(myAnswer)
+			wr.writerow(correctedRow) #Send this result to our outputFile
+			#Update our variables for next iteration
 			prev2Word=prevWord
 			prev2Case=prevCase
-			prev2Correct=prevCorrect
+			prev2Tag=prevTag
+			prev2Lemma=prevLemma
 			prevWord=currWord
 			prevCase=currCase
-			prevCorrect=currCorrect
+			prevTag=currTag
+			prevLemma=currLemma
+		print (errorsFound, " errors found")
+		print ("Results now available in ", outputFileName)
 	#Print our final accuracy data
-	print ("WRONG: "), (wrong)
-	print ("RIGHT: "), (right)
-	print ("RATIO: "), (float(wrong/right))
+	#print ("WRONG: "), (wrong)
+	#print ("RIGHT: "), (right)
+	#print ("RATIO: "), (float(wrong/right))
 
-proofRead(fileName)
+proofRead(inputFileName)
