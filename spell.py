@@ -76,18 +76,13 @@ def sandwichToNumber(sandwich):
 	'at':59,
 	'.t':60,
 	't.':61,
-	'gn':62,
-	'gs':63,
-	'gf':64,
-	'gl':65,
-	'gc':66,
-	'ga':67,
-	'ng':68,
-	'sg':69,
-	'fg':70,
-	'lg':71,
-	'cg':72,
-	'ag':73,
+	'?:':62,
+	'.:':63,
+	';:':64,
+	'!:':65,
+	't:':66,
+	';?':67,
+	'gx':73,
 	'.g':74,
 	'g.':75,
 	'?n':76,
@@ -215,7 +210,21 @@ def sandwichToNumber(sandwich):
 	'?;':199,
 	'??':200,
 	'!?':201,
-	'ge':202
+	'ge':202,
+	';;':203,
+	'g!':204,
+	'?!':205,
+	'e!':206,
+	'a:':207,
+	'c:':208,
+	'e:':209,
+	'f:':210,
+	'l:':211,
+	'x:':212,
+	's:':213,
+	'n:':214,
+	'gg':215,
+	'uu':216
 	}[sandwich]
 
 #Array of file names for our training data
@@ -278,20 +287,30 @@ files = [
 #These characters will be ignored during scanning
 specialChars =['','»', '«', '\\', '{', '}', '±', '^', '_', '>','<', '´','`', "*","$",'\"',"=",'\'',"+","-","[","]","/",":",'(',')',","]
 
-#Function to determine if a string is all numeric digits
+#Helper Function to determine if a string is all numeric digits
 def is_number(s):
 	try:
 		float(s)
 		return True
 	except ValueError:
 		return False
+
+#Helper function to determine if a sandwich exists in our hash-key options
+def sandwich_is_known(sandwich):
+	try:
+		x = sandwichToNumber(sandwich)
+		return x
+	except ValueError:
+		#'uu' is a catch-all key for "Unknown-Unknown", for any unknown sandwiches
+		return sandwichToNumber('uu')
+
 #Iterate through all the training data Files to build our dictionary
 for x in range(0,len(files)):
 	#For each file of our training data
 	with open(files[x]) as csvfile:
 		fieldnames = ['word', 'tag', 'lemma']
 		reader = csv.DictReader(csvfile, fieldnames=fieldnames)
-		print "Building dictionary from", files[x]
+		print "Building dictionary from", files[x], "..."
 		next(reader) #skip the Column headers
 		prevWord='.'
 		prevCase='.'
@@ -325,7 +344,7 @@ for x in range(0,len(files)):
 			#word that follows it, so anytime we scan in a new word, we are then "looking back"
 			#and processing the sandwich of the word that came before it
 			sandwich=prevCase2back+currCase
-			sandwichIndex=sandwichToNumber(sandwich)
+			sandwichIndex=sandwich_is_known(sandwich)
 			#If this is our first instance of the word in this particular context/sandwich,
 			#initialize the hashValue for that pairing. otherwise, increment +1
 			if not allWords[prevWord][2].get(sandwichIndex):
@@ -372,7 +391,8 @@ def getFrequency (word, sandwich):
 	if (not allWords.get(word)):
 		return 0.0001
 	else:
-	 return allWords[word][2].get(sandwich)
+		confirmedSandwich=sandwich_is_known(sandwich)
+		return allWords[word][2].get(confirmedSandwich)
 
 #Test our model on some text with corrected errors
 def practice():
@@ -400,6 +420,7 @@ def practice():
 			if (is_number(currWord)):
 				continue
 			prevSandwich=prev2Case+currCase
+
 			#Use our model to predict the correct spelling
 			myAnswer=correct(prevWord,prevSandwich)
 			if (myAnswer=='i'):
