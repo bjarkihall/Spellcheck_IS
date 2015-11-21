@@ -6,6 +6,9 @@ import random
 
 allWords={}
 
+#Store name of the inputFile from the commandLine
+fileName= sys.argv[1]
+
 #Hash function that takes in a sandwich value and returns an index #
 #Sandwich is a 2-letter string that represents the context for a word.
 #First letter represents the type of word that precedes the current word
@@ -230,7 +233,7 @@ def sandwichToNumber(sandwich):
 #Array of file names for our training data
 
 files = [
-"althingi_tagged/079.csv", 
+"althingi_tagged/079.csv",
 "althingi_tagged/080.csv", 
 "althingi_tagged/081.csv", 
 "althingi_tagged/082.csv",
@@ -395,12 +398,12 @@ def getFrequency (word, sandwich):
 		return allWords[word][2].get(confirmedSandwich)
 
 #Test our model on some text with corrected errors
-def practice():
+def proofRead(file):
 	#These variables will track our accuracy
 	wrong=0
 	right=0
 	print "Proofreading your file now..."
-	with open('althingi_errors/079.csv') as csvfile:
+	with open(file) as csvfile:
 		fieldnames = ['word', 'tag', 'lemma', 'correctWord']
 		reader = csv.DictReader(csvfile, fieldnames=fieldnames)
 		next(reader)
@@ -442,4 +445,4 @@ def practice():
 	print "RIGHT: ", right
 	print "RATIO: ", float(wrong/right)
 
-practice()
+proofRead(fileName)
