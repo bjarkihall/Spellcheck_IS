@@ -313,7 +313,7 @@ for x in range(0,len(files)):
 	with open(files[x]) as csvfile:
 		fieldnames = ['word', 'tag', 'lemma']
 		reader = csv.DictReader(csvfile, fieldnames=fieldnames)
-		print "Building dictionary from", files[x], "..."
+		print ("Building dictionary from"), (files[x]), ("...")
 		next(reader) #skip the Column headers
 		prevWord='.'
 		prevCase='.'
@@ -402,7 +402,7 @@ def proofRead(file):
 	#These variables will track our accuracy
 	wrong=0
 	right=0
-	print "Proofreading your file now..."
+	print ("Proofreading your file now...")
 	with open(file) as csvfile:
 		fieldnames = ['word', 'tag', 'lemma', 'correctWord']
 		reader = csv.DictReader(csvfile, fieldnames=fieldnames)
@@ -431,7 +431,7 @@ def proofRead(file):
 			#Check our prediction against the proven correct spelling
 			if (myAnswer != prevCorrect):
 				wrong +=1
-				print "PrevWord:", prevWord, "MyAnswer: ", myAnswer, "CorrectWord: ", prevCorrect
+				print ("PrevWord:"), (prevWord), ("MyAnswer: "), (myAnswer), ("CorrectWord: "), (prevCorrect)
 			else:
 				right +=1
 			prev2Word=prevWord
@@ -441,8 +441,8 @@ def proofRead(file):
 			prevCase=currCase
 			prevCorrect=currCorrect
 	#Print our final accuracy data
-	print "WRONG: ", wrong
-	print "RIGHT: ", right
-	print "RATIO: ", float(wrong/right)
+	print ("WRONG: "), (wrong)
+	print ("RIGHT: "), (right)
+	print ("RATIO: "), (float(wrong/right))
 
 proofRead(fileName)
