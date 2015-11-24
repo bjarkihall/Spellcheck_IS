@@ -232,63 +232,12 @@ def sandwichToNumber(sandwich):
 	}[sandwich]
 
 #Array of file names for our training data
-
-files = [
-"althingi_tagged/079.csv",
-"althingi_tagged/080.csv",
-"althingi_tagged/081.csv",
-"althingi_tagged/082.csv",
-"althingi_tagged/084.csv",
-"althingi_tagged/085.csv",
-"althingi_tagged/086.csv",
-"althingi_tagged/087.csv",
-"althingi_tagged/088.csv",
-"althingi_tagged/089.csv",
-"althingi_tagged/090.csv",
-"althingi_tagged/091.csv",
-"althingi_tagged/092.csv",
-"althingi_tagged/093.csv",
-"althingi_tagged/094.csv",
-"althingi_tagged/095.csv",
-"althingi_tagged/096.csv",
-"althingi_tagged/097.csv",
-"althingi_tagged/099.csv",
-"althingi_tagged/100.csv",
-"althingi_tagged/101.csv",
-"althingi_tagged/102.csv",
-"althingi_tagged/103.csv",
-"althingi_tagged/104.csv",
-"althingi_tagged/105.csv",
-"althingi_tagged/106.csv",
-"althingi_tagged/107.csv",
-"althingi_tagged/108.csv",
-"althingi_tagged/110.csv",
-"althingi_tagged/112.csv",
-"althingi_tagged/113.csv",
-"althingi_tagged/114.csv",
-"althingi_tagged/115.csv",
-"althingi_tagged/116.csv",
-"althingi_tagged/117.csv",
-"althingi_tagged/118.csv",
-"althingi_tagged/119.csv",
-"althingi_tagged/120.csv",
-"althingi_tagged/121.csv",
-"althingi_tagged/122.csv",
-"althingi_tagged/123.csv",
-"althingi_tagged/124.csv",
-"althingi_tagged/125.csv",
-"althingi_tagged/126.csv",
-"althingi_tagged/127.csv",
-"althingi_tagged/128.csv",
-"althingi_tagged/129.csv",
-"althingi_tagged/130.csv",
-"althingi_tagged/131.csv",
-"althingi_tagged/132.csv",
-"althingi_tagged/133.csv",
-"althingi_tagged/134.csv",
-"althingi_tagged/135.csv",
-"althingi_tagged/136.csv"
-]
+files = []
+for i in range(79,138):
+	if(i < 100):
+		files.append("althingi_tagged/0"+str(i)+".csv")
+	else:
+		files.append("althingi_tagged/"+str(i)+".csv")
 
 #These characters will be ignored during scanning
 specialChars =['','»', '«', '\\', '{', '}', '±', '^', '_', '>','<', '´','`', "*","$",'\"',"=",'\'',"+","-","[","]","/",":",'(',')',","]
