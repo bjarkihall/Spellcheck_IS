@@ -234,10 +234,10 @@ def sandwichToNumber(sandwich):
 #Array of file names for our training data
 
 files = [
-"althingi_tagged/099.csv",
-"althingi_tagged/100.csv",
-"althingi_tagged/101.csv",
-"althingi_tagged/102.csv"
+"althingi_tagged/099.csv"#,
+#"althingi_tagged/100.csv",
+#"althingi_tagged/101.csv",
+#"althingi_tagged/102.csv"
 ]
 
 #These characters will be ignored during scanning
@@ -353,13 +353,18 @@ def getFrequency (word, sandwich):
 #Test our model on some text with corrected errors
 def proofRead(file):
 	#These variables will track our accuracy
-	#wrong=0
-	#right=0
+	ff = 0
+	fp = 0
+	pf = 0
+	pp = 0
+	a_w = []
+	a_cw = []
+	m_cw = []
 	errorsFound=0
 	titles=['Word','Tag','Lemma','CorrectWord']
+
 	print ("Proofreading your file now...")
 	with open(file) as csvfile:
-		#fieldnames = ['word', 'tag', 'lemma', 'correctWord']
 		fieldnames = ['word', 'tag', 'lemma']
 		reader = csv.DictReader(csvfile, fieldnames=fieldnames)
 		#Mechanism to write to a .csv file
@@ -376,17 +381,33 @@ def proofRead(file):
 		prevCase=next(reader)['tag'][:1]
 		prevTag=next(reader)['tag']
 		prevLemma=next(reader)['lemma']
+
+		nrTestRows = -1
 		for row in reader:
+			#for testing:
+			if (nrTestRows == 5):
+				break
+			nrTestRows+=1
+
 			correctedRow=[] #temporary storage of a word-correction
 			currWord=row['word']
 			currCase=row['tag'][:1]
 			currTag=row['tag']
 			currLemma=row['lemma']
+
+			print "before: " + str(nrTestRows) + ", currWord: " + currWord
+			
 			#Skip special Characters
 			if (currWord in specialChars):
 				continue
+			
+			print "after specials: " + str(nrTestRows)
+			
 			if (is_number(currWord)):
 				continue
+			
+			print "after numbers: " + str(nrTestRows)
+			
 			prevSandwich=prev2Case+currCase
 
 			#Use our model to predict the correct spelling
@@ -410,6 +431,11 @@ def proofRead(file):
 			prevCase=currCase
 			prevTag=currTag
 			prevLemma=currLemma
+
+			###
+
+			#Accuracy:
+
 		print errorsFound, " errors found"
 		print "Results now available in ", outputFileName
 	
