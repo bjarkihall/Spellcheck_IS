@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import re, sys,collections, csv
-import random
+import re, sys, collections, csv, random
 
 allWords={}
 
@@ -15,8 +14,8 @@ outputFileName=sys.argv[2]
 #Sandwich is a 2-letter string that represents the context for a word.
 #First letter represents the type of word that precedes the current word
 #Second letter represents the type of word that follows the current word
-#e.g.: if a word's sandwich is 'nl', then we know it is preceded by a nafnörd
-#and is followed by a lýsingarörd
+#e.g.: if a word's sandwich is 'nl', then we know it is preceded by a noun
+#(nafnord) and is followed by an adjective (lysingarord)
 def sandwichToNumber(sandwich):
 	return{
 	'nn':0,
@@ -358,7 +357,7 @@ def proofRead(file):
 	#right=0
 	errorsFound=0
 	titles=['Word','Tag','Lemma','CorrectWord']
-	print "Proofreading your file now..."
+	print ("Proofreading your file now...")
 	with open(file) as csvfile:
 		#fieldnames = ['word', 'tag', 'lemma', 'correctWord']
 		fieldnames = ['word', 'tag', 'lemma']
