@@ -234,10 +234,11 @@ def sandwichToNumber(sandwich):
 #Array of file names for our training data
 
 files = [
-"althingi_tagged/099.csv",
-"althingi_tagged/100.csv",
-"althingi_tagged/101.csv",
-"althingi_tagged/102.csv"
+"althingi_errors/099.csv",
+"althingi_errors/100.csv",
+"althingi_errors/101.csv",
+"althingi_errors/102.csv"
+
 ]
 
 #These characters will be ignored during scanning
@@ -372,10 +373,11 @@ def proofRead(file):
 		prev2Correct='.'
 		prev2Tag='.'
 		prev2Lemma='.'
-		prevWord=next(reader)['word']
-		prevCase=next(reader)['tag'][:1]
-		prevTag=next(reader)['tag']
-		prevLemma=next(reader)['lemma']
+		row1 = next(reader)
+		prevWord=row1['word']
+		prevCase=row1['tag'][:1]
+		prevTag=row1['tag']
+		prevLemma=row1['lemma']
 		for row in reader:
 			correctedRow=[] #temporary storage of a word-correction
 			currWord=row['word']
