@@ -353,90 +353,112 @@ def getFrequency (word, sandwich):
 #Test our model on some text with corrected errors
 def proofRead(file):
 	#These variables will track our accuracy
+	#f = false, p = positive, so fp means "false, positive"
 	ff = 0
 	fp = 0
 	pf = 0
 	pp = 0
-	a_w = []
-	a_cw = []
-	m_cw = []
-	errorsFound=0
-	titles=['Word','Tag','Lemma','CorrectWord']
+	wordWasChanged = 0
+	wordWasNotChanged = 0
+	fieldnames = ['Word','Tag','Lemma','CorrectWord']
 
 	print ("Proofreading your file now...")
+	print "Row: " + " \tprevWord: " + " \tmyAnswer: " + " \tCorrectWord: "
 	with open(file) as csvfile:
-		fieldnames = ['word', 'tag', 'lemma']
 		reader = csv.DictReader(csvfile, fieldnames=fieldnames)
 		#Mechanism to write to a .csv file
 		myFile=open(outputFileName,'wb')
 		wr=csv.writer(myFile,quoting=csv.QUOTE_ALL)
-		wr.writerow(titles)
-		next(reader)
+		wr.writerow(fieldnames)
 		prev2Word='.'
 		prev2Case='.'
 		prev2Correct='.'
 		prev2Tag='.'
 		prev2Lemma='.'
-		prevWord=next(reader)['word']
-		prevCase=next(reader)['tag'][:1]
-		prevTag=next(reader)['tag']
-		prevLemma=next(reader)['lemma']
+		prev2Corr='.'
 
-		nrTestRows = -1
+		next(reader)
+
+		row1 = next(reader)
+		prevWord = row1['Word']
+		prevCase = row1['Tag'][:1]
+		prevTag = row1['Tag']
+		prevLemma = row1['Lemma']
+		prevCorr = row1['CorrectWord']
+
+		nrTestRows = 0
 		for row in reader:
-			#for testing:
+			#for testing purposes:
 			if (nrTestRows == 5):
 				break
 			nrTestRows+=1
 
-			correctedRow=[] #temporary storage of a word-correction
-			currWord=row['word']
-			currCase=row['tag'][:1]
-			currTag=row['tag']
-			currLemma=row['lemma']
+			correctedRow = [] #temporary storage of a word-correction
+			currWord = row['Word']
+			currCase = row['Tag'][:1]
+			currTag = row['Tag']
+			currLemma = row['Lemma']
+			currCorr = row['CorrectWord']
 
-			print "before: " + str(nrTestRows) + ", currWord: " + currWord
+			#print "before: " + str(nrTestRows) + ", currWord: " + currWord
 			
 			#Skip special Characters
 			if (currWord in specialChars):
 				continue
-			
-			print "after specials: " + str(nrTestRows)
-			
 			if (is_number(currWord)):
 				continue
 			
-			print "after numbers: " + str(nrTestRows)
-			
-			prevSandwich=prev2Case+currCase
+			prevSandwich = prev2Case + currCase
+			prevSandwich = prevSandwich.lower()
 
 			#Use our model to predict the correct spelling
-			myAnswer=correct(prevWord,prevSandwich)
-			if (myAnswer=='i'):
-				myAnswer='í'
+			myAnswer = correct(prevWord,prevSandwich)
+			if (myAnswer == 'i'):
+				myAnswer = 'í'
+
+			#print "Row nr: " + str(nrTestRows) + ", prevWord: " + prevWord + ", myAnswer: " + myAnswer + ", CorrectWord: " + prevCorr
+			print str(nrTestRows) + ", \t" + prevWord + ", \t" + myAnswer + ", \t" + prevCorr
+			
+			#Not sure about the logic here, THIS NEEDS TO BE CHANGED, otherwise done!
+			#I have to revise the definition of falsepositive, falsenegative, etc.
 			if (myAnswer != prevWord):
-				errorsFound += 1
+				wordWasChanged += 1
+				print "changed"
+				if (myAnswer == prevCorr):
+					pp+=1
+				else:
+					pf-=1
+			else:
+				wordWasNotChanged += 1
+				print "not changed"
+				if (myAnswer == prevCorr):
+					fp+=1
+				else:
+					ff-=1
+
+
 			#Store data for this row
 			correctedRow.append(prevWord)
 			correctedRow.append(prevTag)
 			correctedRow.append(prevLemma)
 			correctedRow.append(myAnswer)
 			wr.writerow(correctedRow) #Send this result to our outputFile
+			
 			#Update our variables for next iteration
 			prev2Word=prevWord
 			prev2Case=prevCase
 			prev2Tag=prevTag
 			prev2Lemma=prevLemma
+			prev2Correct=prevCorr
+
 			prevWord=currWord
 			prevCase=currCase
 			prevTag=currTag
 			prevLemma=currLemma
+			prevCorr=currCorr
 
-			###
-
-			#Accuracy:
-
-		print errorsFound, " errors found"
+		print "ff: " + str(ff) + ", fp: " + str(fp) + ", pf: " + str(pf) + ", pp: " + str(pp)
+		print wordWasChanged, " errors found"
 		print "Results now available in ", outputFileName
 	
 proofRead(inputFileName)
