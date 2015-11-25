@@ -18,227 +18,38 @@ outputFileName=sys.argv[2]
 #(nafnord) and is followed by an adjective (lysingarord)
 def sandwichToNumber(sandwich):
 	return{
-	'nn':0,
-	'ns':1,
-	'nf':2,
-	'nl':3,
-	'nc':4,
-	'na':5,
-	'sn':6,
-	'ss':7,
-	'sf':8,
-	'sl':9,
-	'sc':10,
-	'sa':11,
-	'fn':12,
-	'fs':13,
-	'ff':14,
-	'fl':15,
-	'fc':16,
-	'fa':17,
-	'ln':18,
-	'ls':19,
-	'lf':20,
-	'll':21,
-	'lc':22,
-	'la':23,
-	'cn':24,
-	'cs':25,
-	'cf':26,
-	'cl':27,
-	'cc':28,
-	'ca':29,
-	'an':30,
-	'as':31,
-	'af':32,
-	'al':33,
-	'ac':34,
-	'aa':35,
-	'.n':36,
-	'.s':37,
-	'.f':38,
-	'.l':39,
-	'.c':40,
-	'.a':41,
-	'n.':42,
-	's.':43,
-	'f.':44,
-	'l.':45,
-	'c.':46,
-	'a.':47,
-	'tn':48,
-	'ts':49,
-	'tf':50,
-	'tl':51,
-	'tc':52,
-	'ta':53,
-	'nt':54,
-	'st':55,
-	'ft':56,
-	'lt':57,
-	'ct':58,
-	'at':59,
-	'.t':60,
-	't.':61,
-	'?:':62,
-	'.:':63,
-	';:':64,
-	'!:':65,
-	't:':66,
-	';?':67,
-	'gx':73,
-	'.g':74,
-	'g.':75,
-	'?n':76,
-	'?s':77,
-	'?f':78,
-	'?l':79,
-	'?c':80,
-	'?a':81,
-	'n?':82,
-	's?':83,
-	'f?':84,
-	'l?':85,
-	'c?':86,
-	'a?':87,
-	'.?':88,
-	'?.':89,
-	'!n':90,
-	'!s':91,
-	'!f':92,
-	'!l':93,
-	'!c':94,
-	'!a':95,
-	'n!':96,
-	's!':97,
-	'f!':98,
-	'l!':99,
-	'c!':100,
-	'a!':101,
-	'.!':102,
-	'!.':103,
-	';n':104,
-	';s':105,
-	';f':106,
-	';l':107,
-	';c':108,
-	';a':109,
-	'n;':110,
-	's;':111,
-	'f;':112,
-	'l;':113,
-	'c;':114,
-	'a;':115,
-	';!':116,
-	'!;':117,
-	'tt':118,
-	't;':119,
-	';t':120,
-	'en':121,
-	'es':122,
-	'ef':123,
-	'el':124,
-	'ec':125,
-	'ea':126,
-	'ne':127,
-	'se':128,
-	'fe':129,
-	'le':130,
-	'ce':131,
-	'ae':132,
-	';e':133,
-	'!e':134,
-	'te':135,
-	'et':136,
-	'gn':137,
-	'gs':138,
-	'gf':139,
-	'gl':140,
-	'gc':141,
-	'ga':142,
-	'ng':143,
-	'sg':144,
-	'fg':145,
-	'lg':146,
-	'cg':147,
-	'ag':148,
-	';g':149,
-	'!g':150,
-	'tg':151,
-	'eg':152,
-	'xn':153,
-	'xs':154,
-	'xf':155,
-	'xl':156,
-	'xc':157,
-	'xa':158,
-	'nx':159,
-	'sx':160,
-	'fx':161,
-	'lx':162,
-	'cx':163,
-	'ax':164,
-	';x':165,
-	'!x':166,
-	'tx':167,
-	'ex':168,
-	't?':170,
-	'?t':171,
-	'gt':172,
-	'x.':173,
-	'?g':174,
-	'..':175,
-	'ee':176,
-	'.x':177,
-	'xt':178,
-	'e.':179,
-	'g?':180,
-	'!t':181,
-	'xx':182,
-	'x;':183,
-	'e;':184,
-	'.e':185,
-	'?x':186,
-	'.;':187,
-	'x!':188,
-	'x?':189,
-	'?e':190,
-	'xg':191,
-	'e?':192,
-	'g:':193,
-	'g;':194,
-	';.':195,
-	'!!':196,
-	't!':197,
-	'xe':198,
-	'?;':199,
-	'??':200,
-	'!?':201,
-	'ge':202,
-	';;':203,
-	'g!':204,
-	'?!':205,
-	'e!':206,
-	'a:':207,
-	'c:':208,
-	'e:':209,
-	'f:':210,
-	'l:':211,
-	'x:':212,
-	's:':213,
-	'n:':214,
-	'gg':215,
-	'uu':216
+	'nn':0,'ns':1,'nf':2,'nl':3,'nc':4,'na':5,'sn':6,'ss':7,'sf':8,'sl':9,'sc':10,
+	'sa':11,'fn':12,'fs':13,'ff':14,'fl':15,'fc':16,'fa':17,'ln':18,'ls':19,'lf':20,
+	'll':21,'lc':22,'la':23,'cn':24,'cs':25,'cf':26,'cl':27,'cc':28,'ca':29,'an':30,
+	'as':31,'af':32,'al':33,'ac':34,'aa':35,'.n':36,'.s':37,'.f':38,'.l':39,'.c':40,
+	'.a':41,'n.':42,'s.':43,'f.':44,'l.':45,'c.':46,'a.':47,'tn':48,'ts':49,'tf':50,
+	'tl':51,'tc':52,'ta':53,'nt':54,'st':55,'ft':56,'lt':57,'ct':58,'at':59,'.t':60,
+	't.':61,'?:':62,'.:':63,';:':64,'!:':65,'t:':66,';?':67,'gx':73,'.g':74,'g.':75,
+	'?n':76,'?s':77,'?f':78,'?l':79,'?c':80,'?a':81,'n?':82,'s?':83,'f?':84,'l?':85,
+	'c?':86,'a?':87,'.?':88,'?.':89,'!n':90,'!s':91,'!f':92,'!l':93,'!c':94,'!a':95,
+	'n!':96,'s!':97,'f!':98,'l!':99,'c!':100,'a!':101,'.!':102,'!.':103,';n':104,
+	';s':105,';f':106,';l':107,';c':108,';a':109,'n;':110,'s;':111,'f;':112,'l;':113,
+	'c;':114,'a;':115,';!':116,'!;':117,'tt':118,'t;':119,';t':120,'en':121,'es':122,
+	'ef':123,'el':124,'ec':125,'ea':126,'ne':127,'se':128,'fe':129,'le':130,'ce':131,
+	'ae':132,';e':133,'!e':134,'te':135,'et':136,'gn':137,'gs':138,'gf':139,'gl':140,
+	'gc':141,'ga':142,'ng':143,'sg':144,'fg':145,'lg':146,'cg':147,'ag':148,';g':149,
+	'!g':150,'tg':151,'eg':152,'xn':153,'xs':154,'xf':155,'xl':156,'xc':157,'xa':158,
+	'nx':159,'sx':160,'fx':161,'lx':162,'cx':163,'ax':164,';x':165,'!x':166,'tx':167,
+	'ex':168,'t?':170,'?t':171,'gt':172,'x.':173,'?g':174,'..':175,'ee':176,'.x':177,
+	'xt':178,'e.':179,'g?':180,'!t':181,'xx':182,'x;':183,'e;':184,'.e':185,'?x':186,
+	'.;':187,'x!':188,'x?':189,'?e':190,'xg':191,'e?':192,'g:':193,'g;':194,';.':195,
+	'!!':196,'t!':197,'xe':198,'?;':199,'??':200,'!?':201,'ge':202,';;':203,'g!':204,
+	'?!':205,'e!':206,'a:':207,'c:':208,'e:':209,'f:':210,'l:':211,'x:':212,'s:':213,
+	'n:':214,'gg':215,'uu':216
 	}[sandwich]
 
 #Array of file names for our training data
 
 files = [
-"althingi_errors/099.csv",
-"althingi_errors/100.csv",
-"althingi_errors/101.csv",
-"althingi_errors/102.csv"
-
+"althingi_tagged/099.csv",
+"althingi_tagged/100.csv",
+"althingi_tagged/101.csv",
+"althingi_tagged/102.csv"
 ]
 
 #These characters will be ignored during scanning
@@ -259,6 +70,7 @@ def sandwich_is_known(sandwich):
 		return x
 	except ValueError:
 		#'uu' is a catch-all key for "Unknown-Unknown", for any unknown sandwiches
+		# Less than ideal, but preferable to program crash
 		return sandwichToNumber('uu')
 
 #Iterate through all the training data Files to build our dictionary
@@ -354,65 +166,121 @@ def getFrequency (word, sandwich):
 #Test our model on some text with corrected errors
 def proofRead(file):
 	#These variables will track our accuracy
-	#wrong=0
-	#right=0
-	errorsFound=0
-	titles=['Word','Tag','Lemma','CorrectWord']
+	#tp = true positive, fp = false positive, fn= false Negative
+	tp = 0
+	fp = 0
+	fn = 0
+	tn = 0
+	wordWasChanged = 0
+	wordWasNotChanged = 0
+	fieldnames = ['Word','Tag','Lemma','CorrectWord']
+
 	print ("Proofreading your file now...")
+	#print "Row: " + " \tprevWord: " + " \tmyAnswer: " + " \tCorrectWord: "
 	with open(file) as csvfile:
 		#fieldnames = ['word', 'tag', 'lemma', 'correctWord']
-		fieldnames = ['word', 'tag', 'lemma']
+		#fieldnames = ['word', 'tag', 'lemma']
+		fieldnames = ['Word','Tag','Lemma','CorrectWord']
 		reader = csv.DictReader(csvfile, fieldnames=fieldnames)
 		#Mechanism to write to a .csv file
 		myFile=open(outputFileName,'wb')
 		wr=csv.writer(myFile,quoting=csv.QUOTE_ALL)
-		wr.writerow(titles)
-		next(reader)
+		wr.writerow(fieldnames)
 		prev2Word='.'
 		prev2Case='.'
 		prev2Correct='.'
 		prev2Tag='.'
 		prev2Lemma='.'
+		prev2Corr='.'
+
+		next(reader)
+
 		row1 = next(reader)
-		prevWord=row1['word']
-		prevCase=row1['tag'][:1]
-		prevTag=row1['tag']
-		prevLemma=row1['lemma']
+		prevWord = row1['Word']
+		prevCase = row1['Tag'][:1]
+		prevTag = row1['Tag']
+		prevLemma = row1['Lemma']
+		prevCorr = row1['CorrectWord']
+
+		nrTestRows = 0
 		for row in reader:
-			correctedRow=[] #temporary storage of a word-correction
-			currWord=row['word']
-			currCase=row['tag'][:1]
-			currTag=row['tag']
-			currLemma=row['lemma']
+			#for testing purposes:
+			#if (nrTestRows == 5):
+			#	break
+			#nrTestRows+=1
+
+			correctedRow = [] #temporary storage of a word-correction
+			currWord = row['Word']
+			currCase = row['Tag'][:1]
+			currTag = row['Tag']
+			currLemma = row['Lemma']
+			currCorr = row['CorrectWord']
+
+			#print "before: " + str(nrTestRows) + ", currWord: " + currWord
+			
 			#Skip special Characters
 			if (currWord in specialChars):
 				continue
 			if (is_number(currWord)):
 				continue
-			prevSandwich=prev2Case+currCase
+			
+			prevSandwich = prev2Case + currCase
+			prevSandwich = prevSandwich.lower()
 
 			#Use our model to predict the correct spelling
-			myAnswer=correct(prevWord,prevSandwich)
-			if (myAnswer=='i'):
-				myAnswer='í'
+			myAnswer = correct(prevWord,prevSandwich)
+			if (myAnswer == 'i'):
+				myAnswer = 'í'
+
+			#print "Row nr: " + str(nrTestRows) + ", prevWord: " + prevWord + ", myAnswer: " + myAnswer + ", CorrectWord: " + prevCorr
+			#print str(nrTestRows) + ", \t" + prevWord + ", \t" + myAnswer + ", \t" + prevCorr
+			
+			#Our spellChecker detects a misspelled Word
 			if (myAnswer != prevWord):
-				errorsFound += 1
+				wordWasChanged += 1
+				#Our suggested correction is the correct spelling
+				if (myAnswer == prevCorr):
+					tn+=1 #This is a True Negative
+				#Our suggested correction is not the correct spelling
+				else:
+					fn+=1 # this is a False negative
+			#Our spellChecker does not detect a misspelling in this word
+			else:
+				wordWasNotChanged += 1
+				#The word was, in fact, correct
+				if (myAnswer == prevCorr):
+					tp+=1 #This is a true positive
+				#The word was misspelled, but we did not catch the error
+				else:
+					fp+=1 # this is a false positive
+					
+
+
 			#Store data for this row
 			correctedRow.append(prevWord)
 			correctedRow.append(prevTag)
 			correctedRow.append(prevLemma)
 			correctedRow.append(myAnswer)
 			wr.writerow(correctedRow) #Send this result to our outputFile
+			
 			#Update our variables for next iteration
 			prev2Word=prevWord
 			prev2Case=prevCase
 			prev2Tag=prevTag
 			prev2Lemma=prevLemma
+			prev2Correct=prevCorr
+
 			prevWord=currWord
 			prevCase=currCase
 			prevTag=currTag
 			prevLemma=currLemma
-		print errorsFound, " errors found"
+			prevCorr=currCorr
+
+		print "True Positives: " + str(tp)
+		print "False Positives: " + str(fp)
+		print "True Negatives: " + str(tn)
+		print "False Negatives: " + str(fn)
+		print wordWasChanged, " errors found"
 		print "Results now available in ", outputFileName
 	
 proofRead(inputFileName)
